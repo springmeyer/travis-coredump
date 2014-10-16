@@ -18,7 +18,7 @@ This repo contains a demo of:
  - A c++ program that will crash when run leading to a core dump
  - How to programatically generate a backtrace from the coredump so you can see it in the travis logs
 
-See the `.travis.yml` for detailed instructions.
+See the `.travis.yml` for detailed instructions and the resulting logs at <https://travis-ci.org/springmeyer/travis-coredump/> which should show one run not crash and the other crash with a nice backtrace like.
 
 ### Other platforms
 
