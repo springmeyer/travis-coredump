@@ -65,8 +65,9 @@ Great, so now that you've confirmed it crashed, let's get more fancy.
 To script the auto generation of the backtrace we can collect the PID and use that to find the core file and generate a backtrace:
 
 
-#### OSX
+#### OS X
 
+On OS X for this to work (unfortunely) you need a very recent lldb version.
 ```sh
 CRASH_PLEASE=1 ./test & pid=$! && fg;
 lldb --core /cores/core.$pid --batch --one-line "bt"
@@ -75,8 +76,9 @@ lldb --core /cores/core.$pid --batch --one-line "bt"
 #### Linux
 
 ```sh
-CRASH_PLEASE=1 ./test & pid=$! && fg;
-gdb $(pwd)/test core.$pid -ex "thread apply all bt" -ex "set pagination 0" -batch
+sudo apt-get install gdb
+CRASH_PLEASE=1 ./test
+gdb $(pwd)/test core -ex "thread apply all bt" -ex "set pagination 0" -batch
 ```
 
 
