@@ -34,6 +34,52 @@ Thread 1 (LWP 2611):
 #1  0x00000000004005d6 in main () at might_crash.cpp:6
 ```
 
+## Running locally
+
+To experiment locally:
+
+1) Build the test program
+
+```sh
+make
+```
+
+2) Enable core files
+
+```sh
+ulimit -c unlimited -S
+```
+
+3) Run test program and make it crash
+
+```
+CRASH_PLEASE=1 ./test
+```
+
+You should see a nasty error show up with `(core dumped)` in the last line.
+
+4) Generate a backtrace
+
+Great, so now that you've confirmed it crashed, let's get more fancy.
+
+To script the auto generation of the backtrace we can collect the PID and use that to find the core file and generate a backtrace:
+
+
+#### OSX
+
+```sh
+CRASH_PLEASE=1 ./test & pid=$! && fg;
+lldb --core /cores/core.$pid --batch --one-line "bt"
+```
+
+#### Linux
+
+```sh
+CRASH_PLEASE=1 ./test & pid=$! && fg;
+gdb $(pwd)/test core.$pid -ex "thread apply all bt" -ex "set pagination 0" -batch
+```
+
+
 ### Other platforms
 
 If you are on OS X, you don't need to worry about these steps, just look inside:

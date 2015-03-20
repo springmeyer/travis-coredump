@@ -26,7 +26,7 @@ script:
  - RESULT=0
  # Compile our demo program which will crash if
  # the CRASH_PLEASE environment variable is set (to anything)
- - g++ -o test might_crash.cpp -g -O0 -DDEBUG
+ - make
  # Run the program to prompt a crash
  # Note: we capture the return code of the program here and add
  # `|| true` to ensure that travis continues past the crash
