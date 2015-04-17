@@ -9,7 +9,7 @@ checkout:
 ## Customize dependencies
 dependencies:
   pre:
-    - sudo apt-get -y install gdb
+    - sudo apt-get -y update && sudo apt-get -y install gdb
 
   cache_directories:
     - "./mason_packages"
