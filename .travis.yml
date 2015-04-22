@@ -1,5 +1,12 @@
 language: cpp
 
+sudo: false
+
+addons:
+  apt:
+    packages:
+     - gdb
+
 env:
   matrix:
    - CRASH_PLEASE=boooooooom
@@ -10,20 +17,18 @@ compiler:
  - gcc
 
 before_install:
- # install the gnu debugger for later use in reading the core file
- - sudo apt-get -y install gdb
-
-install:
  # What is the current file size max for core files?
  # It is usually 0, which means no core file will be dumped if there is a crash 
  - ulimit -c
 
-before_script:
+install:
  # Set the core file limit to unlimited so a core file is generated upon crash
  - ulimit -c unlimited -S
 
-script:
+before_script:
  - RESULT=0
+
+script:
  # Compile our demo program which will crash if
  # the CRASH_PLEASE environment variable is set (to anything)
  - make
