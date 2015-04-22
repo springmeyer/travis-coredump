@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
      - gdb
+     - apport
 
 env:
   matrix:
