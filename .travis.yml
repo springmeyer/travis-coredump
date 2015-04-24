@@ -16,11 +16,11 @@ env:
 compiler:
  # gcc compiler, clang would be fine too
  - gcc
+
+before_install:
  - which catchsegv
  - catchsegv --help
  - catchsegv --version
-
-before_install:
  # What is the current file size max for core files?
  # It is usually 0, which means no core file will be dumped if there is a crash 
  - ulimit -c
