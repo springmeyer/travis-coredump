@@ -33,7 +33,8 @@ install:
  - ulimit -c
  - ulimit -a -S
  - ulimit -a -H
- - cat /proc/sys/kernel/core_pattern 
+ - cat /proc/sys/kernel/core_pattern
+ - echo "core.%e.%p.%h.%t" > /proc/sys/kernel/core_pattern
 
 before_script:
  - RESULT=0
