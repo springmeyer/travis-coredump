@@ -21,8 +21,8 @@ ECHO "setting path for VC"
 SET PATH=C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\bin;%PATH%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO "installing windbg"
-call choco install windbg
+::ECHO "installing windbg"
+::call choco install windbg
 
 ECHO "setting path for windbg"
 set PATH=C:\Program Files (x86)\Windows Kits\8.1\Debuggers\%platform%;%PATH%
@@ -70,7 +70,7 @@ IF EXIST %LOCALAPPDATA%\CrashDumps (
   dir %LOCALAPPDATA%\CrashDumps
   ::windbg
   ::ntsd
-  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -v -y .\ -i .\might_crash.exe -z "%%f"
+  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -v -y .\ -i .\ -z "%%f"
 )
 
 GOTO DONE
