@@ -65,12 +65,13 @@ set CRASH_PLEASE=1
 ::call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin\SetEnv.cmd" /%platform% /release
 
 :: https://msdn.microsoft.com/en-us/library/windows/desktop/bb787181(v=vs.85).aspx
+:: http://www.codeproject.com/Articles/31997/How-to-Use-and-Understand-the-Windows-Console-Debu
 IF EXIST %LOCALAPPDATA%\CrashDumps (
   ECHO CrashDumps found
   dir %LOCALAPPDATA%\CrashDumps
   ::windbg
   ::ntsd
-  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -c "!clrstack;q" -G -v -y .\ -i .\ -z "%%f"
+  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -c "k;q" -G -v -y .\ -i .\ -z "%%f"
 )
 
 GOTO DONE
