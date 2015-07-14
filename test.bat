@@ -1,4 +1,5 @@
-@echo off
+::@echo off
+
 SET EL=0
 
 
