@@ -6,19 +6,7 @@ environment:
       platform: x86
 
 install:
-  # https://msdn.microsoft.com/en-us/library/f2ccy3wt.aspx
-  - SET PATH=C:\Program Files (x86)\MSBuild\%msvs_toolset%.0\bin;%PATH%
-  - SET PATH=C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\bin;%PATH%
-  # note: will override %PLATFORM% to upper case
-  - if %platform% == x64 CALL "C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\vcvarsall.bat" amd64
-  - if %platform% == x86 CALL "C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\vcvarsall.bat" amd64_x86
-  - cl /MD /Zi /Fmight_crash.pdb /nologo /EHsc /D NDEBUG might_crash.cpp
-  - .\might_crash
-  - set CRASH_PLEASE=1
-  - .\might_crash > dump.txt || true
-  - echo "got here"
-  - SET /p RESULT=<dump.txt
-  - echo %RESULT%
+  - test.bat
 
 build: OFF
 test: OFF
