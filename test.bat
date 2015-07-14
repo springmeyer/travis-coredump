@@ -43,7 +43,8 @@ set CRASH_PLEASE=1
 IF EXIST %LOCALAPPDATA%\CrashDumps (
   ECHO CrashDumps found
   dir %LOCALAPPDATA%\CrashDumps
-  dump %LOCALAPPDATA%\CrashDumps\might_crash.exe.*.dmp
+  ntsd
+  cdb
 )
 
 GOTO DONE
