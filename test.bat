@@ -3,6 +3,8 @@
 SET EL=0
 
 
+choco install windbg
+
 reg import enable-local-dumps.reg
 IF %ERRORLEVEL% NEQ 0 ECHO could not enable local dumps && GOTO ERROR
 
