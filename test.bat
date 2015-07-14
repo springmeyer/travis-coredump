@@ -70,7 +70,7 @@ IF EXIST %LOCALAPPDATA%\CrashDumps (
   dir %LOCALAPPDATA%\CrashDumps
   ::windbg
   ::ntsd
-  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -G -v -y .\ -i .\ -z "%%f"
+  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -c "!clrstack;q" -G -v -y .\ -i .\ -z "%%f"
 )
 
 GOTO DONE
