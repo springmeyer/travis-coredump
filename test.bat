@@ -1,6 +1,10 @@
 @echo off
 SET EL=0
 
+
+reg import enable-local-dumps.reg
+IF %ERRORLEVEL% NEQ 0 ECHO could not enable local dumps && GOTO ERROR
+
 if "%msvs_toolset%"=="" SET msvs_toolset=12
 if "%platform%"=="" SET platform=x64
 
@@ -35,6 +39,8 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 ECHO "running test program again"
 set CRASH_PLEASE=1
 .\might_crash
+
+IF EXIST %LOCALAPPDATA%\CrashDumps ECHO CrashDumps found && dir %LOCALAPPDATA%\CrashDumps
 
 GOTO DONE
 
