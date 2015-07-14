@@ -1,0 +1,13 @@
+
+platform:
+  - x64
+
+install:
+  - cl /MD /Zi /Fmight_crash.pdb /nologo /EHsc /D NDEBUG might_crash.cpp
+  - .\might_crash
+  - set CRASH_PLEASE=1
+  - .\might_crash
+
+build: OFF
+test: OFF
+deploy: OFF
