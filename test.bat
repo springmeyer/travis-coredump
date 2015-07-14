@@ -43,8 +43,10 @@ set CRASH_PLEASE=1
 
 SET WIN_SDK_ROOT=C:\Program Files\Microsoft SDKs\Windows
 set WINDOWS_SDK_VERSION=v7.1
-"%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Setup\WindowsSdkVer.exe" -q -version:%WINDOWS_SDK_VERSION%
-"%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin\SetEnv.cmd" /%platform% /release
+ECHO "Running WindowsSdkVer.exe"
+call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Setup\WindowsSdkVer.exe" -q -version:%WINDOWS_SDK_VERSION%
+ECHO "Running SetEnv.cmd"
+call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin\SetEnv.cmd" /%platform% /release
 
 IF EXIST %LOCALAPPDATA%\CrashDumps (
   ECHO CrashDumps found
