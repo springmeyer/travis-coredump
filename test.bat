@@ -48,7 +48,7 @@ set WINDOWS_SDK_VERSION=v7.1
 dir "%WIN_SDK_ROOT%"
 dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%"
 dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin"
-dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Redist"
+dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Redist\amd64"
 
 ECHO "Running WindowsSdkVer.exe"
 call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Setup\WindowsSdkVer.exe" -q -version:%WINDOWS_SDK_VERSION%
