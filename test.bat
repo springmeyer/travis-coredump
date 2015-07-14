@@ -39,7 +39,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 ECHO "VC env %platform% enabled"
 
 ECHO "compiling test program"
-cl /MD /Zi /Fmight_crash.pdb /nologo /EHsc /D NDEBUG might_crash.cpp
+cl /MD /Zi /Fmight_crash.pdb /nologo /EHsc /DEBUG /D DEBUG might_crash.cpp
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO "running test program"
@@ -70,7 +70,7 @@ IF EXIST %LOCALAPPDATA%\CrashDumps (
   dir %LOCALAPPDATA%\CrashDumps
   ::windbg
   ::ntsd
-  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -v -y .\ -i .\ -z "%%f"
+  for %%f in (%LOCALAPPDATA%\CrashDumps\*) do cdb -G -v -y .\ -i .\ -z "%%f"
 )
 
 GOTO DONE
