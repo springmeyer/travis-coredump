@@ -3,8 +3,6 @@
 SET EL=0
 
 
-choco install windbg
-
 reg import enable-local-dumps.reg
 IF %ERRORLEVEL% NEQ 0 ECHO could not enable local dumps && GOTO ERROR
 
@@ -22,6 +20,15 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 ECHO "setting path for VC"
 SET PATH=C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\bin;%PATH%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+ECHO "installing windbg"
+call choco install windbg
+
+ECHO "setting path for windbg"
+set PATH=C:\Program Files (x86)\Windows Kits\8.1\Debuggers\%platform%;%PATH%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+dir "C:\Program Files (x86)\Windows Kits\8.1\Debuggers\%platform%"
 
 :: note: will override %PLATFORM% to upper case
 ECHO "enabling VC env %platform%"
