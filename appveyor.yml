@@ -1,8 +1,16 @@
-
-platform:
-  - x64
+environment:
+  matrix:
+    - msvs_toolset: 12
+      platform: x64
+    - msvs_toolset: 12
+      platform: x86
 
 install:
+  - SET PATH=C:\Program Files (x86)\MSBuild\%msvs_toolset%.0\bin;%PATH%
+  - SET PATH=C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\bin;%PATH%
+  # note: will override %PLATFORM% to upper case
+  - if %platform% == x64 CALL "C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\vcvarsall.bat" amd64
+  - if %platform% == x86 CALL "C:\Program Files (x86)\Microsoft Visual Studio %msvs_toolset%.0\VC\vcvarsall.bat" amd64_x86
   - cl /MD /Zi /Fmight_crash.pdb /nologo /EHsc /D NDEBUG might_crash.cpp
   - .\might_crash
   - set CRASH_PLEASE=1
