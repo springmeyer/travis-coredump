@@ -40,7 +40,11 @@ ECHO "running test program again"
 set CRASH_PLEASE=1
 .\might_crash
 
-IF EXIST %LOCALAPPDATA%\CrashDumps ECHO CrashDumps found && dir %LOCALAPPDATA%\CrashDumps
+IF EXIST %LOCALAPPDATA%\CrashDumps (
+  ECHO CrashDumps found
+  dir %LOCALAPPDATA%\CrashDumps
+  dump %LOCALAPPDATA%\CrashDumps\might_crash.exe.*.dmp
+)
 
 GOTO DONE
 
