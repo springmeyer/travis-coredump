@@ -1,11 +1,11 @@
 environment:
   matrix:
-    - msvs_toolset: 14
+    - msvs_toolset: 12
       platform: x64
-    - msvs_toolset: 14
+    - msvs_toolset: 12
       platform: x86
 
-os: Visual Studio 2015 RC
+#os: Visual Studio 2015 RC
 
 install:
   - test.bat
