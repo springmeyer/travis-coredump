@@ -70,7 +70,7 @@ IF EXIST %LOCALAPPDATA%\CrashDumps (
   dir %LOCALAPPDATA%\CrashDumps
   ::windbg
   ::ntsd
-  for %%f in (*) do cdb -v -y .\ -i .\might_crash.exe -z %%f
+  for %%f in (%LOCALAPPDATA%\CrashDumps) do cdb -v -y .\ -i .\might_crash.exe -z "%%f"
 )
 
 GOTO DONE
