@@ -52,26 +52,25 @@ set CRASH_PLEASE=1
 .\might_crash
 
 :: https://msdn.microsoft.com/en-us/library/windows/hardware/ff542967(v=vs.85).aspx
-SET WIN_SDK_ROOT=C:\Program Files\Microsoft SDKs\Windows
-set WINDOWS_SDK_VERSION=v7.1
-dir "%WIN_SDK_ROOT%"
-dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%"
-dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin"
-dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Redist\amd64"
+::SET WIN_SDK_ROOT=C:\Program Files\Microsoft SDKs\Windows
+::set WINDOWS_SDK_VERSION=v7.1
+::dir "%WIN_SDK_ROOT%"
+::dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%"
+::dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin"
+::dir "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Redist\amd64"
 
-ECHO "Running WindowsSdkVer.exe"
-call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Setup\WindowsSdkVer.exe" -q -version:%WINDOWS_SDK_VERSION%
-ECHO "Running SetEnv.cmd"
-call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin\SetEnv.cmd" /%platform% /release
+::ECHO "Running WindowsSdkVer.exe"
+::call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Setup\WindowsSdkVer.exe" -q -version:%WINDOWS_SDK_VERSION%
+::ECHO "Running SetEnv.cmd"
+::call "%WIN_SDK_ROOT%\%WINDOWS_SDK_VERSION%\Bin\SetEnv.cmd" /%platform% /release
 
 :: https://msdn.microsoft.com/en-us/library/windows/desktop/bb787181(v=vs.85).aspx
 IF EXIST %LOCALAPPDATA%\CrashDumps (
   ECHO CrashDumps found
   dir %LOCALAPPDATA%\CrashDumps
-  windbg
-  ntsd
-  cdb
-
+  ::windbg
+  ::ntsd
+  for %%f in (*) do cdb -v -y .\ -i .\might_crash.exe -z %%f
 )
 
 GOTO DONE
