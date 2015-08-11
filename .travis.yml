@@ -1,6 +1,8 @@
 language: cpp
 
-sudo: false
+# Generating core dumps requires a sudo machine
+# https://github.com/travis-ci/travis-ci/issues/3754
+sudo: true
 
 addons:
  apt:
