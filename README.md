@@ -1,5 +1,7 @@
 ## travis-coredump
 
+[![Build Status](https://travis-ci.org/springmeyer/travis-coredump.svg?branch=master)](https://travis-ci.org/springmeyer/travis-coredump)
+
 On travis you might see a cryptic error like:
 
     /home/travis/build.sh: line 41:  2300 Segmentation fault
