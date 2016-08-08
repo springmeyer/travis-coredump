@@ -9,6 +9,7 @@ ulimit -c
 ulimit -a -S
 cat /proc/sys/kernel/core_pattern || true
 sysctl kernel.core_pattern
+sudo service apport restart
 echo '#!/usr/bin/env bash' > apport
 echo '' >> apport
 echo "echo yes >> $(pwd)/core" >> apport
@@ -16,7 +17,8 @@ chmod +x ./apport
 sudo cp apport /usr/share/apport/apport
 sudo bash -c "chmod +x /usr/share/apport/apport"
 sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
-sudo bash -c "echo \"core.%e.%p.%h.%t\" > /proc/sys/kernel/core_pattern"
+# the below hits: 'bash: /proc/sys/kernel/core_pattern: Permission denied'
+#sudo bash -c "echo \"core.%e.%p.%h.%t\" > /proc/sys/kernel/core_pattern" || true
 sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
 RESULT=0
 # Compile our demo program which will crash if
