@@ -9,6 +9,8 @@ ulimit -c
 ulimit -a -S
 cat /proc/sys/kernel/core_pattern || true
 sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
+sudo bash -c "echo \"core.%e.%p.%h.%t\" > /proc/sys/kernel/core_pattern"
+sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
 RESULT=0
 # Compile our demo program which will crash if
 # the CRASH_PLEASE environment variable is set (to anything)
