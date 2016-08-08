@@ -8,6 +8,13 @@ ulimit -c unlimited -S
 ulimit -c
 ulimit -a -S
 cat /proc/sys/kernel/core_pattern || true
+sysctl kernel.core_pattern
+echo '#!/usr/bin/env bash' > apport
+echo '' >> apport
+echo "echo yes >> $(pwd)/core" >> apport
+chmod +x ./apport
+sudo cp apport /usr/share/apport/apport
+sudo bash -c "chmod +x /usr/share/apport/apport"
 sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
 sudo bash -c "echo \"core.%e.%p.%h.%t\" > /proc/sys/kernel/core_pattern"
 sudo bash -c "cat /proc/sys/kernel/core_pattern" || true
