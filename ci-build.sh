@@ -9,7 +9,7 @@ ulimit -c
 ulimit -a -S
 cat /proc/sys/kernel/core_pattern || true
 sysctl kernel.core_pattern
-sudo service apport restart
+sudo service apport stop || true
 echo '#!/usr/bin/env bash' > apport
 echo '' >> apport
 echo "echo yes >> $(pwd)/core" >> apport
@@ -29,6 +29,8 @@ make
 # `|| true` to ensure that travis continues past the crash
 RESULT=$(./test > /dev/null)$? || true
 ls
+ls /var/crash || true
+cat /var/log/apport.log || true
 if [[ ${RESULT} == 0 ]]; then echo "\\o/ our test worked without problems"; else echo "ruhroh test returned an errorcode of $RESULT"; fi;
 # If the program returned an error code, now we check for a
 # core file in the current working directory and dump the backtrace out
