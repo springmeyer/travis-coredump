@@ -30,6 +30,7 @@ make
 # Run the program to prompt a crash
 # Note: we capture the return code of the program here and add
 # `|| true` to ensure that travis continues past the crash
+./test || true
 RESULT=$(./test > ./output.txt)$? || true
 cat ./output.txt
 ls
