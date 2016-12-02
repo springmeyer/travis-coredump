@@ -1,18 +1,3 @@
-language: cpp
-
-sudo: false
-
-addons:
-  apt:
-    packages:
-     - gdb
-     - apport
-
-env:
-  matrix:
-   - CRASH_PLEASE=boooooooom
-   - HAPPY_NO_CRASH=all-good
-
 compiler:
  # gcc compiler, clang would be fine too
  - gcc
@@ -23,32 +8,58 @@ before_install:
  - ulimit -c
  - ulimit -a -S
  - ulimit -a -H
-
-install:
- # Set the core file limit to unlimited so a core file is generated upon crash
- - ulimit -c unlimited -S
- - ulimit -c
- - ulimit -a -S
- - ulimit -a -H
  - cat /proc/sys/kernel/core_pattern
- #- echo "core.%e.%p.%h.%t" > /proc/sys/kernel/core_pattern
 
-before_script:
- - RESULT=0
-
-script:
- # Compile our demo program which will crash if
- # the CRASH_PLEASE environment variable is set (to anything)
- - make
- # Run the program to prompt a crash
- # Note: we capture the return code of the program here and add
- # `|| true` to ensure that travis continues past the crash
- - ./test || RESULT=$?
- - ls -l
- - if [[ ${RESULT} == 0 ]]; then echo "\\o/ our test worked without problems"; else echo "ruhroh test returned an errorcode of $RESULT"; fi;
- # If the program returned an error code, now we check for a
- # core file in the current working directory and dump the backtrace out
- - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/test core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
- # now we should present travis with the original
- # error code so the run cleanly stops
- - if [[ ${RESULT} != 0 ]]; then exit $RESULT ; fi;
+matrix:
+  include:
+    # sudo:true (where logbt does work)
+    - os: linux
+      language: cpp
+      sudo: true
+      dist: precise
+      script:
+       # install mason
+       - mkdir ./mason/
+       - curl -sSfL https://github.com/mapbox/mason/archive/v0.2.0.tar.gz | tar --gunzip --extract --strip-components=1 --directory=./mason/
+       # install gdb via mason
+       - ./mason/mason install gdb 7.12
+       # put GDB on PATH
+       - export PATH=$(./mason/mason prefix gdb 7.12)/bin:${PATH}
+       # install logbt
+       - curl -sSfL https://github.com/mapbox/logbt/archive/v1.6.0.tar.gz | tar --gunzip --extract --strip-components=2 --exclude="*md" --exclude="test*" --directory=.
+       - RESULT=0
+       # Compile our demo program which will crash if
+       # the CRASH_PLEASE environment variable is set
+       - make
+       # Run the program to prompt a crash
+       # Note: we capture the return code of the program here and add
+       # `|| true` to ensure that travis continues past the crash
+       - CRASH_PLEASE=1 ./logbt ./test || RESULT=$?
+       # for the purpose of this repo we assume the test will crash so let's
+       # assert that the RESULT is nonzero
+       # For a real repo you would likely assert the RESULT is zero
+       - if [[ ${RESULT} == 0 ]]; then echo "expected crash and non-zero exit but instead saw a zero exit" && exit 1; fi;
+    # sudo:false / docker (where logbt does not work)
+    - os: linux
+      language: cpp
+      sudo: false
+      dist: precise
+      addons:
+        apt:
+          packages:
+           - gdb
+           - apport
+      script:
+       # Compile our demo program which will crash if
+       # the CRASH_PLEASE environment variable is set (to anything)
+       - make
+       # Run the program to prompt a crash
+       # Note: we capture the return code of the program here and add
+       # `|| true` to ensure that travis continues past the crash
+       - CRASH_PLEASE= 1 ./test || RESULT=$?
+       - ls -l
+       # for the purpose of this repo we assume the test will crash so let's
+       # assert that the RESULT is nonzero
+       # For a real repo you would likely assert the RESULT is zero
+       - if [[ ${RESULT} == 0 ]]; then echo "expected crash and non-zero exit but instead saw a zero exit" && exit 1; fi;
+       - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/test core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
