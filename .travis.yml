@@ -53,6 +53,8 @@ matrix:
        # Compile our demo program which will crash if
        # the CRASH_PLEASE environment variable is set (to anything)
        - make
+       # Set the ulimit
+       - ulimit -c unlimited -S
        # Run the program to prompt a crash
        # Note: we capture the return code of the program here and add
        # `|| true` to ensure that travis continues past the crash
