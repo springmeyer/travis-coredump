@@ -56,7 +56,7 @@ matrix:
        # Run the program to prompt a crash
        # Note: we capture the return code of the program here and add
        # `|| true` to ensure that travis continues past the crash
-       - CRASH_PLEASE= 1 ./test || RESULT=$?
+       - CRASH_PLEASE=1 ./test || RESULT=$?
        - ls -l
        # for the purpose of this repo we assume the test will crash so let's
        # assert that the RESULT is nonzero
