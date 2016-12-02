@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/springmeyer/travis-coredump.svg?branch=master)](https://travis-ci.org/springmeyer/travis-coredump)
 
+WARNING: only `sudo:true` machines can produce coredumps currently on travis (https://github.com/springmeyer/travis-coredump/issues/6)
+
 On travis you might see a cryptic error like:
 
     /home/travis/build.sh: line 41:  2300 Segmentation fault
