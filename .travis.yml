@@ -9,6 +9,8 @@ before_install:
  - ulimit -a -S
  - ulimit -a -H
  - cat /proc/sys/kernel/core_pattern
+ - cat /etc/default/apport
+ - service --status-all || true
 
 matrix:
   include:
