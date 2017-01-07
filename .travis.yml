@@ -11,6 +11,7 @@ before_install:
  - cat /proc/sys/kernel/core_pattern
  - cat /etc/default/apport
  - service --status-all || true
+ - initctl list || true
 
 matrix:
   include:
