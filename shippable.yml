@@ -1,0 +1,22 @@
+build:
+  pre_ci:
+    - docker build -t logbt-precise -f Dockerfile.ubuntu-precise .
+    - cat /proc/sys/kernel/core_pattern
+
+language: none
+
+before_install:
+  - echo "before_install"
+  - git clone http://github.com/mapbox/logbt
+  - cat /proc/sys/kernel/core_pattern
+
+install:
+  - pwd
+  - cd logbt
+  - ./bin/logbt --test
+
+before_script:
+  - echo "before_script"
+
+script:
+  - echo "script"
