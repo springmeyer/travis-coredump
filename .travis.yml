@@ -1,79 +1,49 @@
-arch:
-  - amd64
-  - arm64  # please note arm64-graviton2 requires explicit virt: [lxd|vm] tag so it's recommended for jobs.include, see below
-  - ppc64le
-  - s390x
-
-compiler:
- # gcc compiler, clang would be fine too
- - gcc
+language: cpp
 
 before_install:
+ - node -e "console.log(process.arch)" || true
  # What is the current file size max for core files?
  # It is usually 0, which means no core file will be dumped if there is a crash 
- - node -e "console.log(process.arch)" || true
  - ulimit -c
  - ulimit -a -S
  - ulimit -a -H
  - cat /proc/sys/kernel/core_pattern
  - cat /etc/default/apport
- - service --status-all || true
- - initctl list || true
+
+script:
+  # Compile our demo program which will crash if
+  # the CRASH_PLEASE environment variable is set (to anything)
+  - make
+  # Set the ulimit
+  - ulimit -c unlimited -S
+  # Run the program to prompt a crash
+  # Note: we capture the return code of the program here and add
+  # `|| true` to ensure that travis continues past the crash
+  - CRASH_PLEASE=1 ./test || RESULT=$?
+  - ls -l
+  # For the purpose of this repo we assume the test will crash so let's
+  # assert that the RESULT is 139 (exit code for a segfault)
+  # For a real repo you would likely assert the RESULT is zero
+  - if [[ ${RESULT} != 139 ]]; then echo "expected segfault and 139 exit but instead exited with ${RESULT}" && exit 1; fi;
+  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/test core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
+
+addons:
+  apt:
+    packages:
+      - gdb
+      - apport
 
 matrix:
   include:
-    # sudo:true (where logbt does work)
     - os: linux
-      language: cpp
-      sudo: true
-      dist: precise
-      script:
-       # install mason
-       - mkdir ./mason/
-       - curl -sSfL https://github.com/mapbox/mason/archive/v0.2.0.tar.gz | tar --gunzip --extract --strip-components=1 --directory=./mason/
-       # install gdb via mason
-       - ./mason/mason install gdb 7.12
-       # put GDB on PATH
-       - export PATH=$(./mason/mason prefix gdb 7.12)/bin:${PATH}
-       # install logbt
-       - curl -sSfL https://github.com/mapbox/logbt/archive/v1.6.0.tar.gz | tar --gunzip --extract --strip-components=2 --exclude="*md" --exclude="test*" --directory=.
-       - RESULT=0
-       # Compile our demo program which will crash if
-       # the CRASH_PLEASE environment variable is set
-       - make
-       # modify corepattern for logbt
-       - sudo bash -c "echo '/tmp/logbt-coredumps/core.%p.%E' > /proc/sys/kernel/core_pattern"
-       # Run the program to prompt a crash
-       # Note: we capture the return code of the program here and add
-       # `|| true` to ensure that travis continues past the crash
-       - CRASH_PLEASE=1 ./logbt ./test || RESULT=$?
-       # For the purpose of this repo we assume the test will crash so let's
-       # assert that the RESULT is 139 (exit code for a segfault)
-       # For a real repo you would likely assert the RESULT is zero
-       - if [[ ${RESULT} != 139 ]]; then echo "expected segfault and 139 exit but instead exited with ${RESULT}" && exit 1; fi;
-    # sudo:false / docker (where logbt does not work)
+      arch: amd64
     - os: linux
-      language: cpp
-      sudo: false
-      dist: precise
-      addons:
-        apt:
-          packages:
-           - gdb
-           - apport
-      script:
-       # Compile our demo program which will crash if
-       # the CRASH_PLEASE environment variable is set (to anything)
-       - make
-       # Set the ulimit
-       - ulimit -c unlimited -S
-       # Run the program to prompt a crash
-       # Note: we capture the return code of the program here and add
-       # `|| true` to ensure that travis continues past the crash
-       - CRASH_PLEASE=1 ./test || RESULT=$?
-       - ls -l
-       # For the purpose of this repo we assume the test will crash so let's
-       # assert that the RESULT is 139 (exit code for a segfault)
-       # For a real repo you would likely assert the RESULT is zero
-       - if [[ ${RESULT} != 139 ]]; then echo "expected segfault and 139 exit but instead exited with ${RESULT}" && exit 1; fi;
-       - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/test core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
+      arch: arm64
+    - os: linux
+      arch: arm64-graviton2
+      virt: vm
+    - os: linux
+      arch: arm64-graviton2
+      virt: lxd
+    - os: linux
+      arch: amd64
